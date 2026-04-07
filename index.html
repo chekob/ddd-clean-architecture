@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DDD Clean Architecture — Animated Flow Diagrams</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-gray-200 min-h-screen flex flex-col items-center p-8 gap-8">
+
+<div class="text-center">
+  <h1 class="text-2xl font-bold text-gray-100 mb-2">DDD Clean Architecture</h1>
+  <p class="text-gray-500">Animated Flow Diagrams — BioPro Specialty Lab Special Testing</p>
+</div>
+
+<div class="grid grid-cols-2 gap-6 max-w-4xl w-full">
+
+  <!-- Flow 1 -->
+  <a href="flow1-graphql-animation.html" class="border-2 border-purple-700/50 bg-purple-950/20 rounded-xl p-6 hover:border-purple-500 hover:bg-purple-950/30 transition-all group">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">🌐</span>
+      <h2 class="text-lg font-bold text-purple-400 group-hover:text-purple-300">Flow 1: GraphQL</h2>
+    </div>
+    <p class="text-sm text-gray-400 mb-3">Client → Controller → UseCase → Domain → Infrastructure</p>
+    <div class="flex flex-wrap gap-2 text-[10px]">
+      <span class="px-2 py-0.5 rounded bg-purple-900/50 text-purple-300">42 steps</span>
+      <span class="px-2 py-0.5 rounded bg-purple-900/50 text-purple-300">5 phases</span>
+      <span class="px-2 py-0.5 rounded bg-green-900/50 text-green-300">✅ Available</span>
+    </div>
+  </a>
+
+  <!-- Flow 2 -->
+  <div class="border-2 border-gray-700/50 bg-gray-900/20 rounded-xl p-6 opacity-50 cursor-not-allowed">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">📡</span>
+      <h2 class="text-lg font-bold text-gray-500">Flow 2: RSocket</h2>
+    </div>
+    <p class="text-sm text-gray-600 mb-3">External Service → RSocket Controller → UseCase → Domain</p>
+    <div class="flex flex-wrap gap-2 text-[10px]">
+      <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-500">Coming soon</span>
+    </div>
+  </div>
+
+  <!-- Flow 3 -->
+  <div class="border-2 border-gray-700/50 bg-gray-900/20 rounded-xl p-6 opacity-50 cursor-not-allowed">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">📥</span>
+      <h2 class="text-lg font-bold text-gray-500">Flow 3: Kafka Listener</h2>
+    </div>
+    <p class="text-sm text-gray-600 mb-3">Kafka Topic → Listener → Application Service → Domain</p>
+    <div class="flex flex-wrap gap-2 text-[10px]">
+      <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-500">Coming soon</span>
+    </div>
+  </div>
+
+  <!-- Flow 4 -->
+  <div class="border-2 border-gray-700/50 bg-gray-900/20 rounded-xl p-6 opacity-50 cursor-not-allowed">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-2xl">📢</span>
+      <h2 class="text-lg font-bold text-gray-500">Flow 4: Spring Events</h2>
+    </div>
+    <p class="text-sm text-gray-600 mb-3">Application Event → @EventListener → Service → Domain</p>
+    <div class="flex flex-wrap gap-2 text-[10px]">
+      <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-500">Coming soon</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Legend -->
+<div class="text-center text-[11px] text-gray-600 max-w-2xl">
+  <p>Each flow diagram is an interactive animation showing the complete request/response lifecycle through all DDD layers (Adapter → Application → Domain → Infrastructure) with phase-colored step labels.</p>
+</div>
+
+</body>
+</html>
