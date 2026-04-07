@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flow 1: GraphQL → Controller → UseCase → Domain</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{token:'#e94560'}}}}</script>
+<script src="flow-shared-styles.js"></script>
+</head>
+<body class="bg-gray-950 text-gray-200 min-h-screen flex flex-col items-center p-4 gap-3">
+
+<h1 class="text-lg font-bold text-gray-100">Flow 1: GraphQL Client → Controller → UseCase → Domain</h1>
+<p class="text-xs text-gray-500">DDD Clean Architecture — Request/Response Lifecycle</p>
+
+<div class="flex items-center gap-3">
+  <button id="btnPlay" class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">▶ Play</button>
+  <button id="btnPause" class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">⏸ Pause</button>
+  <button id="btnReset" class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">↺ Reset</button>
+  <button id="btnSpeed" class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">Speed: 1x</button>
+  <button id="btnPrev" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">◀</button>
+  <button id="btnNext" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded text-sm">▶</button>
+</div>
+<div id="stepLabel" class="text-token text-sm font-semibold h-6 min-w-[700px] text-center">Press Play to start</div>
+
+<div id="diagram" class="relative border-2 border-gray-700 rounded-2xl bg-gray-900/50 p-4 flex flex-col" style="width:1200px">
+
+  <!-- ===== ADAPTER LAYER ===== -->
+  <div class="flex items-start gap-4 pb-4">
+    <div class="text-purple-500 font-bold text-[13px] min-w-[100px] pt-2">🌐 ADAPTER</div>
+    <div class="flex items-start gap-4 flex-1">
+      <div class="flex flex-col gap-2">
+        <div id="client" class="node node-adapter">
+          <span class="font-bold">👤 GraphQL Client</span>
+        </div>
+        <div id="errHandler" class="node node-exception">
+          <span class="font-bold">⚠️ Error Handler</span>
+        </div>
+      </div>
+      <div id="controller" class="node node-adapter">
+        <span class="font-bold">🎮 Controller</span>
+        <span class="text-gray-400">@Controller</span>
+        <span class="text-gray-500 text-[10px]">@Query / @Mutation / @Subscription</span>
+      </div>
+      <div id="mappingBox" class="pipe pipe-adapter flex-1">
+        <span class="text-[12px] font-bold text-pink-400">🔄 Adapter Mapping Pipeline (3+ params)</span>
+        <div class="flex items-center gap-3">
+          <div id="reqDto" class="node node-object">
+            <span class="font-bold">📦 Request DTO</span>
+            <span class="text-gray-400">@Argument params</span>
+          </div>
+          <span class="text-pink-400/60 text-lg">→</span>
+          <div id="webMapper" class="node node-mapper">
+            <span class="font-bold">🔄 Web Mapper</span>
+            <span class="text-gray-400">@Mapper</span>
+          </div>
+        </div>
+        <span class="text-pink-400/60">↓</span>
+        <div id="cmdObj" class="node node-object">
+          <span class="font-bold">📝 Command Object</span>
+          <span class="text-gray-400">record @Builder</span>
+          <span class="text-[9px] text-pink-300/60 italic mt-0.5">⤷ lives in Application layer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DIVIDER: Adapter → Application ─── -->
+  <div class="divider border-purple-700/50">
+    <span class="bg-gray-900/90 text-purple-400/70">Adapter ↕ Application</span>
+  </div>
+
+  <!-- ===== APPLICATION LAYER ===== -->
+  <div class="flex items-start gap-4 pb-4">
+    <div class="text-green-500 font-bold text-[13px] min-w-[100px] pt-2">⚙️ APPLICATION</div>
+    <div class="flex items-start gap-4 flex-1">
+      <!-- UseCase stack -->
+      <div class="flex flex-col gap-1 items-center">
+        <div id="ucIface" class="node node-interface">
+          <span class="font-bold">📋 UseCase Interface</span>
+          <span class="text-gray-500">CommandUseCase&lt;I,O&gt;</span>
+        </div>
+        <span class="text-green-500/60 text-[11px]">▼ implements</span>
+        <div id="ucImpl" class="node node-impl">
+          <span class="font-bold">🔧 UseCase Impl</span>
+          <span class="text-gray-400">@UseCase</span>
+        </div>
+      </div>
+      <!-- Domain Mapping Pipeline -->
+      <div id="domMappingBox" class="pipe pipe-domain flex-1">
+        <span class="text-[12px] font-bold text-emerald-400">🔄 Domain Mapping Pipeline</span>
+        <div class="flex items-center gap-3">
+          <div id="cmdInput" class="node node-object">
+            <span class="font-bold">📝 Command</span>
+            <span class="text-gray-400">write path input</span>
+          </div>
+          <span class="text-emerald-400/60 text-lg">→</span>
+          <div id="appMapper" class="node node-mapper">
+            <span class="font-bold">🔄 App Mapper</span>
+            <span class="text-gray-400">@Mapper</span>
+          </div>
+          <span class="text-emerald-400/60 text-lg">→</span>
+          <div id="appDto" class="node node-object">
+            <span class="font-bold">📦 Application DTO</span>
+            <span class="text-gray-400">read path output</span>
+          </div>
+        </div>
+        <span class="text-emerald-400/60">↕ maps to/from</span>
+        <div id="aggregate" class="node node-object">
+          <span class="font-bold">👑 Aggregate / 🏷️ Entity</span>
+          <span class="text-gray-400">@Data @Builder — self-validates</span>
+          <span class="text-[9px] text-emerald-300/60 italic mt-0.5">⤷ lives in Domain layer — invariants enforced internally</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DIVIDER: Application → Domain ─── -->
+  <div class="divider border-green-700/50">
+    <span class="bg-gray-900/90 text-green-400/70">Application ↕ Domain</span>
+  </div>
+
+  <!-- ===== DOMAIN LAYER ===== -->
+  <div class="flex items-center gap-4 pb-4">
+    <div class="text-yellow-500 font-bold text-[13px] min-w-[100px]">💎 DOMAIN</div>
+    <div class="flex items-center gap-4 flex-1">
+      <div id="domRepoIface" class="node node-interface">
+        <span class="font-bold">📋 Repository Interface</span>
+        <span class="text-gray-500">Mono&lt;T&gt; / Flux&lt;T&gt;</span>
+      </div>
+      <div id="domEx" class="node node-exception">
+        <span class="font-bold">⚠️ Domain Exception</span>
+        <span class="text-gray-400">extends GenericException</span>
+      </div>
+      <div id="domEvent" class="node node-object">
+        <span>📢 Domain Event</span>
+        <span class="text-gray-500">(record, past tense)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DIVIDER: Domain → Infrastructure ─── -->
+  <div class="divider border-yellow-700/50">
+    <span class="bg-gray-900/90 text-yellow-400/70">Domain ↕ Infrastructure</span>
+  </div>
+
+  <!-- ===== INFRASTRUCTURE LAYER ===== -->
+  <div class="flex items-start gap-4">
+    <div class="text-blue-400 font-bold text-[13px] min-w-[100px] pt-2">🏗️ INFRA</div>
+    <div class="flex flex-col gap-3 flex-1">
+      <!-- Co-located persistence package -->
+      <div class="border border-dashed border-blue-400/30 bg-blue-950/10 rounded-lg p-3">
+        <span class="text-[11px] text-blue-400/50 mb-2 block">📦 Co-located Persistence Package</span>
+        <div class="flex items-start gap-4">
+          <div class="flex flex-col gap-2 items-center">
+            <div id="repoImpl" class="node node-impl">
+              <span class="font-bold">🔧 Repository Impl</span>
+              <span class="text-gray-400">@DomainRepository</span>
+            </div>
+            <div id="entRepo" class="node node-infra">
+              <span class="font-bold">📂 Entity Repository</span>
+              <span class="text-gray-400">@Repository (pkg-access)</span>
+            </div>
+          </div>
+          <div id="infraMappingBox" class="pipe pipe-infra flex-1">
+            <span class="text-[12px] font-bold text-sky-400">🔄 Entity Mapping Pipeline</span>
+            <div class="flex items-center gap-3">
+              <div id="entMapper" class="node node-mapper">
+                <span class="font-bold">🔄 Entity Mapper</span>
+                <span class="text-gray-400">@Mapper (pkg-access)</span>
+              </div>
+              <span class="text-sky-400/60 text-lg">→</span>
+              <div id="dbEntity" class="node node-object">
+                <span class="font-bold">🗄️ DB Entity</span>
+                <span class="text-gray-400">@Table Persistable</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div id="db" class="node node-db rounded-xl">
+          <span class="font-bold text-sm">🐘 PostgreSQL</span>
+          <span class="text-gray-400">Non-blocking R2DBC</span>
+        </div>
+        <div id="kafkaProd" class="node node-infra">
+          <span class="font-bold">📤 Kafka Producer</span>
+          <span class="text-gray-400">Publishes Domain Events</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG overlay for animated edges -->
+  <svg id="edgeSvg" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:10"></svg>
+  <div id="token" class="token hidden"></div>
+</div>
+
+<!-- Legend -->
+<div class="flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-gray-500">
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-dashed border-yellow-400 bg-yellow-950/30 inline-block"></span> Interface</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-violet-400/80 bg-violet-950/40 inline-block"></span> Implementation</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-blue-400/80 bg-blue-950/40 inline-block"></span> Object / DTO / Record</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-green-400/80 bg-green-950/40 inline-block"></span> Mapper</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-red-500/80 bg-red-950/40 inline-block"></span> Exception / Error</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-gray-400/60 bg-gray-800/40 inline-block"></span> Infrastructure</span>
+  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded border-2 border-dashed border-pink-400/50 bg-pink-950/10 inline-block"></span> Pipeline</span>
+  <span class="flex items-center gap-1"><span class="w-4 h-0.5 bg-token inline-block"></span> Active</span>
+  <span class="flex items-center gap-1"><span class="w-4 h-0 border-t border-dashed border-gray-400 inline-block"></span> Optional</span>
+</div>
+
+<script src="flow-shared-engine.js"></script>
+<script src="flow1-logic.js"></script>
+</body>
+</html>
